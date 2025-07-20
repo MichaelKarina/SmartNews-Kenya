@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📰 SmartNews Kenya</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+    <header class="hero-header">
+        <div class="hero-content">
+            <img src="https://flagcdn.com/w320/ke.png" alt="Kenya Flag" class="kenya-flag">
+            <div>
+                <h1>📰 SmartNews Kenya</h1>
+                <p class="tagline">Curated Real-Time Stories from Kenya and Beyond</p>
+            </div>
+        </div>
+
+        <div class="ticker">
+            <marquee behavior="scroll" direction="left" scrollamount="6">
+                🚨 Trending: Raila Odinga’s latest statement • Kenya vs Uganda match updates • Gospel revival in Nakuru • Global inflation updates • Hustler Fund phase 2 announced
+            </marquee>
+        </div>
+        <div class="topbar">
+            <nav class="topbar-nav">
+                <a href="/" class="{% if not selected %}active{% endif %}">🏠 Home</a>
+                <a href="/category/politics" class="{% if selected == 'Politics' %}active{% endif %}">⚖️ Politics</a>
+                <a href="/category/entertainment">🎭 Entertainment</a>
+                <a href="/category/sports">⚽ Sports</a>
+                <a href="/category/business">📈 Business</a>
+                <a href="/category/trending">🔥 Trending</a>
+            </nav>
+            <div class="topbar-clock" id="liveClock">🕒 12:00:00</div>
+                <script>
+                setInterval(() => {
+                document.getElementById("liveClock").textContent = "🕒 " + new Date().toLocaleTimeString();
+                }, 1000);
+                </script>
+            </div>
+            <small class="text-muted">🕒 Last updated: {{ updated_at.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+
+
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search news...">
+        </div>
+    </header>
+
+    <main>
+        
+        {% if articles %}
+    <div class="grid" id="articleGrid">
+        {% for article in articles %}
+            <div class="card" data-title="{{ article.title | lower }}" data-category="{{ article.category }}">
+                
+                {% if article.image %}
+                    <img src="{{ article.image }}" alt="Thumbnail" class="thumbnail">
+                {% else %}
+                    <img src="https://via.placeholder.com/600x300?text=No+Image" alt="No Image" class="thumbnail">
+                {% endif %}
+                
+                <h2>{{ article.title }}</h2>
+                <p class="meta">
+                    <span class="badge source">{{ article.source }}</span> • 
+                    <span class="badge category">{{ article.category }}</span>
+                </p>
+                <a href="{{ article.link }}" target="_blank" class="readmore">Read Full Story →</a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-articles">🚫 No articles found. Run the scraper first.</p>
+{% endif %}
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SmartNews Kenya • Built with ❤️ in Nairobi</p>
+    </footer>
+</body>
+</html>
